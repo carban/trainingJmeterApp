@@ -1,0 +1,36 @@
+applications:
+  - name: trainingApp
+    environments:
+      develop:
+        URL: ec2-3-19-237-162.us-east-2.compute.amazonaws.com
+        port: 8080
+        threads: 500
+        rampUp: 60
+        iterations: 1
+        numberEndpoints: 5
+        endpoints:
+          - /add
+          - /subtract
+          - /multiply
+          - /divide
+          - /countUppercase
+        methods:
+          - POST
+          - POST
+          - POST
+          - POST
+          - POST
+        bodies:
+         - {"a": 10, "b": 5}
+         - {"a": 5, "b": 10}
+         - {"a": 5, "b": 10}
+         - {"a": 14, "b": 2}
+         - "ToDay is MOndaY"
+
+      production:
+        # iterations: 3
+        # connectivity: 3gfast
+        # mobile: true
+        # urlsToTest:
+        #   - https://www.bbc.com/mundo
+        #   - https://www.bbc.com/mundo/noticias-60499179
