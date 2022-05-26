@@ -1,5 +1,5 @@
 pipeline {
-    agent none
+    agent { dockerfile true }
     // parameters {
     //     string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
     // }
