@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'linux' }
     parameters {
         string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
     }
@@ -19,28 +19,28 @@ pipeline {
                 echo 'Reporting'
             }
         }
-        stage ("Dockering...."){
-            agent {
-                docker {image: 'carbanx/jmeter'}
-            }
+        // stage ("Dockering...."){
+        //     agent {
+        //         docker {image: 'carbanx/jmeter'}
+        //     }
+        //     steps {
+        //         sh "python -c 'print(2+2)'"
+        //     }
+        // }
+        stage ("Building docker image"){
             steps {
-                sh "python -c 'print(2+2)'"
+                sh """
+                    docker build -t carbanx/jmeter .
+                """
             }
         }
-        // stage ("Building docker image"){
-        //     steps {
-        //         sh """
-        //             docker build -t carbanx/jmeter .
-        //         """
-        //     }
-        // }
-        // stage ("Running Docker container"){
-        //     steps {
-        //         sh """
-        //             docker run --rm carbanx/jmeter
-        //         """
-        //     }
-        // }
+        stage ("Running Docker container"){
+            steps {
+                sh """
+                    docker run --rm carbanx/jmeter
+                """
+            }
+        }
 
     }
 }
