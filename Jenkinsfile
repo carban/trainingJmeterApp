@@ -1,8 +1,8 @@
 pipeline {
-    agent { label 'linux' }
-    parameters {
-        string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
-    }
+    agent none
+    // parameters {
+    //     string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
+    // }
     stages {
         stage ("Compile Stage") {
             steps {
