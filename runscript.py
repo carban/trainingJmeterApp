@@ -3,51 +3,25 @@ import sys
 import subprocess
 import json
 
-# Loading file and parameters ---------------------------------------------------------
-
-with open("applications.yml", 'r') as stream:
-    data = yaml.safe_load(stream)
-
-app, env = sys.argv[1], sys.argv[2]
-
-# Searching for the app and the environment ---------------------------------------------------------
-
-apps = data["applications"]
-appFound = False
-specs = {}
-
-for a in apps:
-    if (a["name"] == app):
-        appFound = True
-        try:
-            specs = a["environments"][env]
-            break
-        except:
-            print("No environment found")
-            sys.exit() 
-
-if not appFound:
-    print("No app found")
-    sys.exit()
-
 # Making the docker command ---------------------------------------------------------------------------------
 
 print("Catching specs.........")
-url, port, threads, rampUp, iterations = specs["URL"], specs["port"], specs["threads"], specs["rampUp"], specs["iterations"]
-numberEndpoints = specs["numberEndpoints"]
-endpoints, methods, bodies = specs["endpoints"], specs["methods"], specs["bodies"]
+url, port, threads, rampUp, iterations = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5]
+numberEndpoints = 1
+endpoints, methods = sys.argv[6], sys.argv[7]
 
 print("Building the docker command with the following specs.........")
 # print(json.dumps(specs, indent=4, sort_keys=True))
 
 # Yes....windows
 jmeter = "C:/Users/carlos.murillos/Downloads/apache-jmeter-5.4.3/bin/jmeter.bat"
+# jmeter = "./../apache-jmeter-5.4.3/bin/jmeter"
 
 for i in range(numberEndpoints):
     command = [jmeter]
-    command.extend(["-JURL", url, "-Jport", str(port), "-Jendpoint", endpoints[i], "-Jthreads", str(threads), "-JrampUp", str(rampUp)])
-    command.extend(["-Jiterations", str(iterations), "-Jmethod", methods[i], "-Jbody", json.dumps(bodies[i])])
-    command.extend(["-n", "-t", "script1.jmx", "-l", "out_"+endpoints[i].replace("/", "")+".jtl"])
+    # command.extend(["-JURL", url, "-Jport", str(port), "-Jendpoint", endpoints, "-Jthreads", str(threads), "-JrampUp", str(rampUp)])
+    # command.extend(["-Jiterations", str(iterations), "-Jmethod", methods, "-Jbody", json.dumps({"a": 10, "b": 5})])
+    # command.extend(["-n", "-t", "script1.jmx", "-l", "out_"+endpoints.replace("/", "")+".jtl"])
     print(command)
     print("Running.....", i+1)
     process = subprocess.call(command)

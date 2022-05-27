@@ -1,32 +1,12 @@
 pipeline {
     agent { label 'standard-slave' }
     parameters {
-        string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
+        choice(name: 'TEST', choices: ['normal', 'stress', 'load', 'peaks', 'wordLoad'], description: 'Select a test')
+        string(name: 'TIME', defaultValue: '60', description: 'Test time')
+        string(name: 'HOST', defaultValue: '', description: 'Host address')
+        string(name: 'PORT', defaultValue: '8080', description: 'Port number')
     }
     stages {
-        stage ("Compile Stage") {
-            steps {
-                echo 'Compiling'
-            }
-        }
-        stage ("Run Stage") {
-            steps {
-                echo "Running.... Hello ${params.PERSON}"
-            }
-        }
-        stage ("Report Stage") {
-            steps {
-                echo 'Reporting'
-            }
-        }
-        // stage ("Dockering...."){
-        //     agent {
-        //         docker {image: 'carbanx/jmeter'}
-        //     }
-        //     steps {
-        //         sh "python -c 'print(2+2)'"
-        //     }
-        // }
         stage ("Building docker image"){
             steps {
                 sh """
@@ -34,10 +14,17 @@ pipeline {
                 """
             }
         }
-        stage ("Running Docker container"){
+        stage ("Checking Container"){
             steps {
                 sh """
                     docker run --rm carbanx/jmeter
+                """
+            }
+        }
+        stage ("Running Docker container"){
+            steps {
+                sh """
+                    docker run -it --rm carbanx/jmeter python testingScript.py ${params.TEST}" ${params.TIME}" ${params.HOST}" ${params.PORT}"
                 """
             }
         }
