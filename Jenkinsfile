@@ -24,7 +24,7 @@ pipeline {
         stage ("Running Docker container"){
             steps {
                 sh """
-                    docker run -i --rm carbanx/jmeter python testingScript.py ${params.TEST}" ${params.TIME}" ${params.HOST}" ${params.PORT}"
+                    docker run -t --rm carbanx/jmeter python testingScript.py ${params.TEST}" ${params.TIME}" ${params.HOST}" ${params.PORT}"
                 """
             }
         }
